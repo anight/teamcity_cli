@@ -28,6 +28,11 @@ def server():
     """Commands related to the server instance"""
 
 
+@cli.group()
+def user():
+    """Commands related to users"""
+
+
 @server.command(name='info')
 @click.pass_context
 def server_info(ctx):
@@ -89,6 +94,26 @@ def build_show_tags(ctx, args):
     """Display info for selected build(s)"""
     for build_id in args:
         data = ctx.obj.get_build_tags_by_build_id(build_id)
+        output = json.dumps(data, indent=4)
+        click.echo(output)
+
+
+@user.command(name='list')
+@click.pass_context
+def user_list(ctx):
+    """Display list of users"""
+    data = ctx.obj.get_all_users()
+    output = json.dumps(data, indent=4)
+    click.echo(output)
+
+
+@user.command(name='show')
+@click.pass_context
+@click.argument('args', nargs=-1)
+def user_show(ctx, args):
+    """Display info for selected users"""
+    for user_id in args:
+        data = ctx.obj.get_user_by_username(user_id)
         output = json.dumps(data, indent=4)
         click.echo(output)
 
