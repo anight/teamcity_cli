@@ -24,6 +24,11 @@ def project():
 
 
 @cli.group()
+def change():
+    """Commands related to changes"""
+
+
+@cli.group()
 def server():
     """Commands related to the server instance"""
 
@@ -153,6 +158,26 @@ def server_agent_show(ctx, args):
     """Display info for selected agent(s)"""
     for agent_id in args:
         data = ctx.obj.get_agent_by_agent_id(agent_id)
+        output = json.dumps(data, indent=4)
+        click.echo(output)
+
+
+@change.command(name='list')
+@click.pass_context
+def change_list(ctx):
+    """Display list of changes"""
+    data = ctx.obj.get_all_changes()
+    output = json.dumps(data, indent=4)
+    click.echo(output)
+
+
+@change.command(name='show')
+@click.pass_context
+@click.argument('args', nargs=-1)
+def change_show(ctx, args):
+    """Display info for selected changes"""
+    for change_id in args:
+        data = ctx.obj.get_change_by_change_id(change_id)
         output = json.dumps(data, indent=4)
         click.echo(output)
 
