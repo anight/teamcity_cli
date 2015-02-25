@@ -66,5 +66,32 @@ def build_list(ctx):
     click.echo(output)
 
 
+@build.group(name='show')
+def build_show():
+    """Show statistics/tags/etc. for builds"""
+
+
+@build_show.command(name='statistics')
+@click.pass_context
+@click.argument('args', nargs=-1)
+def build_show_statistics(ctx, args):
+    """Display info for selected build(s)"""
+    for build_id in args:
+        data = ctx.obj.get_build_statistics_by_build_id(build_id)
+        output = json.dumps(data, indent=4)
+        click.echo(output)
+
+
+@build_show.command(name='tags')
+@click.pass_context
+@click.argument('args', nargs=-1)
+def build_show_tags(ctx, args):
+    """Display info for selected build(s)"""
+    for build_id in args:
+        data = ctx.obj.get_build_tags_by_build_id(build_id)
+        output = json.dumps(data, indent=4)
+        click.echo(output)
+
+
 if __name__ == '__main__':
     cli()
