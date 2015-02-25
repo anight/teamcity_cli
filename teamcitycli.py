@@ -146,5 +146,16 @@ def server_agent_list(ctx):
     click.echo(output)
 
 
+@server_agent.command(name='show')
+@click.pass_context
+@click.argument('args', nargs=-1)
+def server_agent_show(ctx, args):
+    """Display info for selected agent(s)"""
+    for agent_id in args:
+        data = ctx.obj.get_agent_by_agent_id(agent_id)
+        output = json.dumps(data, indent=4)
+        click.echo(output)
+
+
 if __name__ == '__main__':
     cli()
