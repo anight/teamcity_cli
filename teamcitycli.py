@@ -118,5 +118,19 @@ def user_show(ctx, args):
         click.echo(output)
 
 
+@server.group(name='plugin')
+def server_plugin():
+    """Show info about server plugins"""
+
+
+@server_plugin.command(name='list')
+@click.pass_context
+def server_plugin_list(ctx):
+    """Display list of plugins"""
+    data = ctx.obj.get_all_plugins()
+    output = json.dumps(data, indent=4)
+    click.echo(output)
+
+
 if __name__ == '__main__':
     cli()
