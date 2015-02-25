@@ -132,5 +132,19 @@ def server_plugin_list(ctx):
     click.echo(output)
 
 
+@server.group(name='agent')
+def server_agent():
+    """Show info about agents"""
+
+
+@server_agent.command(name='list')
+@click.pass_context
+def server_agent_list(ctx):
+    """Display list of agents"""
+    data = ctx.obj.get_agents()
+    output = json.dumps(data, indent=4)
+    click.echo(output)
+
+
 if __name__ == '__main__':
     cli()
