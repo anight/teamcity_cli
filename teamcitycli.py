@@ -7,8 +7,10 @@ from pyteamcity import TeamCity
 
 
 @click.group()
-def cli():
+@click.pass_context
+def cli(ctx):
     """CLI for interacting with TeamCity"""
+    ctx.obj = TeamCity()
 
 
 @cli.group()
@@ -27,28 +29,39 @@ def server():
 
 
 @server.command(name='info')
-def server_info():
+@click.pass_context
+def server_info(ctx):
     """Display info about TeamCity server"""
-    tc = TeamCity()
-    data = tc.get_server_info()
+    data = ctx.obj.get_server_info()
     output = json.dumps(data, indent=4)
     click.echo(output)
 
 
 @project.command(name='list')
-def project_list():
+@click.pass_context
+def project_list(ctx):
     """Display list of projects"""
-    tc = TeamCity()
-    data = tc.get_all_projects()
+    data = ctx.obj.get_all_projects()
     output = json.dumps(data, indent=4)
     click.echo(output)
 
 
+@project.command(name='show')
+@click.pass_context
+@click.argument('args', nargs=-1)
+def project_show(ctx, args):
+    """Display info for selected projects"""
+    for project_id in args:
+        data = ctx.obj.get_project_by_project_id(project_id)
+        output = json.dumps(data, indent=4)
+        click.echo(output)
+
+
 @build.command(name='list')
-def build_list():
+@click.pass_context
+def build_list(ctx):
     """Display list of builds"""
-    tc = TeamCity()
-    data = tc.get_all_builds(start=0, count=100)
+    data = ctx.obj.get_all_builds(start=0, count=100)
     output = json.dumps(data, indent=4)
     click.echo(output)
 
