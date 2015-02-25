@@ -3,7 +3,19 @@
 import json
 
 import click
+import pygments.formatters
+import pygments.lexers
 from pyteamcity import TeamCity
+
+
+lexer = pygments.lexers.get_lexer_by_name('json')
+formatter = pygments.formatters.TerminalFormatter()
+
+
+def output_json_data(data):
+    output = json.dumps(data, indent=4)
+    output = pygments.highlight(output, lexer, formatter).strip()
+    click.echo(output)
 
 
 @click.group()
@@ -43,8 +55,7 @@ def user():
 def server_info(ctx):
     """Display info about TeamCity server"""
     data = ctx.obj.get_server_info()
-    output = json.dumps(data, indent=4)
-    click.echo(output)
+    output_json_data(data)
 
 
 @project.command(name='list')
@@ -52,8 +63,7 @@ def server_info(ctx):
 def project_list(ctx):
     """Display list of projects"""
     data = ctx.obj.get_all_projects()
-    output = json.dumps(data, indent=4)
-    click.echo(output)
+    output_json_data(data)
 
 
 @project.command(name='show')
@@ -63,8 +73,7 @@ def project_show(ctx, args):
     """Display info for selected projects"""
     for project_id in args:
         data = ctx.obj.get_project_by_project_id(project_id)
-        output = json.dumps(data, indent=4)
-        click.echo(output)
+        output_json_data(data)
 
 
 @build.command(name='list')
@@ -72,8 +81,7 @@ def project_show(ctx, args):
 def build_list(ctx):
     """Display list of builds"""
     data = ctx.obj.get_all_builds(start=0, count=100)
-    output = json.dumps(data, indent=4)
-    click.echo(output)
+    output_json_data(data)
 
 
 @build.group(name='show')
@@ -88,8 +96,7 @@ def build_show_statistics(ctx, args):
     """Display info for selected build(s)"""
     for build_id in args:
         data = ctx.obj.get_build_statistics_by_build_id(build_id)
-        output = json.dumps(data, indent=4)
-        click.echo(output)
+        output_json_data(data)
 
 
 @build_show.command(name='tags')
@@ -99,8 +106,7 @@ def build_show_tags(ctx, args):
     """Display info for selected build(s)"""
     for build_id in args:
         data = ctx.obj.get_build_tags_by_build_id(build_id)
-        output = json.dumps(data, indent=4)
-        click.echo(output)
+        output_json_data(data)
 
 
 @user.command(name='list')
@@ -108,8 +114,7 @@ def build_show_tags(ctx, args):
 def user_list(ctx):
     """Display list of users"""
     data = ctx.obj.get_all_users()
-    output = json.dumps(data, indent=4)
-    click.echo(output)
+    output_json_data(data)
 
 
 @user.command(name='show')
@@ -119,8 +124,7 @@ def user_show(ctx, args):
     """Display info for selected users"""
     for user_id in args:
         data = ctx.obj.get_user_by_username(user_id)
-        output = json.dumps(data, indent=4)
-        click.echo(output)
+        output_json_data(data)
 
 
 @server.group(name='plugin')
@@ -133,8 +137,7 @@ def server_plugin():
 def server_plugin_list(ctx):
     """Display list of plugins"""
     data = ctx.obj.get_all_plugins()
-    output = json.dumps(data, indent=4)
-    click.echo(output)
+    output_json_data(data)
 
 
 @server.group(name='agent')
@@ -147,8 +150,7 @@ def server_agent():
 def server_agent_list(ctx):
     """Display list of agents"""
     data = ctx.obj.get_agents()
-    output = json.dumps(data, indent=4)
-    click.echo(output)
+    output_json_data(data)
 
 
 @server_agent.command(name='show')
@@ -158,8 +160,7 @@ def server_agent_show(ctx, args):
     """Display info for selected agent(s)"""
     for agent_id in args:
         data = ctx.obj.get_agent_by_agent_id(agent_id)
-        output = json.dumps(data, indent=4)
-        click.echo(output)
+        output_json_data(data)
 
 
 @change.command(name='list')
@@ -167,8 +168,7 @@ def server_agent_show(ctx, args):
 def change_list(ctx):
     """Display list of changes"""
     data = ctx.obj.get_all_changes()
-    output = json.dumps(data, indent=4)
-    click.echo(output)
+    output_json_data(data)
 
 
 @change.command(name='show')
@@ -178,8 +178,7 @@ def change_show(ctx, args):
     """Display info for selected changes"""
     for change_id in args:
         data = ctx.obj.get_change_by_change_id(change_id)
-        output = json.dumps(data, indent=4)
-        click.echo(output)
+        output_json_data(data)
 
 
 if __name__ == '__main__':
