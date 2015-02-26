@@ -78,6 +78,10 @@ def project_show(ctx, args):
 
 
 @build.command(name='list')
+@click.option('--show-url/--no-show-url', default=False,
+              help='Show URL for request')
+@click.option('--show-data/--no-show-data', default=True,
+              help='Show data retrieved from request')
 @click.option('--start', default=0, help='Start index')
 @click.option('--count', default=100, help='Max number of items to show')
 @click.option('--build-type-id', default=None, help='buildTypeId to filter on')
@@ -85,13 +89,30 @@ def project_show(ctx, args):
               type=click.Choice(['table', 'json']),
               help='Output format')
 @click.pass_context
-def build_list(ctx, start, count, build_type_id, output_format):
+def build_list(ctx, show_url, show_data,
+               start, count, build_type_id, output_format):
     """Display list of builds"""
+    kwargs = {'start': start,
+              'count': count}
     if build_type_id:
-        data = ctx.obj.get_all_builds_by_build_type_id(
-            start=start, count=count, build_type_id=build_type_id)
+        kwargs['build_type_id'] = build_type_id
+
+    if build_type_id:
+        func = ctx.obj.get_all_builds_by_build_type_id
     else:
-        data = ctx.obj.get_all_builds(start=start, count=count)
+        func = ctx.obj.get_all_builds
+
+    data = func(**kwargs)
+
+    if show_url:
+        kwargs['return_type'] = 'url'
+        url = func(**kwargs)
+        click.echo(url)
+
+    if not show_data:
+        return
+
+    click.echo()
 
     if output_format == 'table':
         column_names = ['status', 'number', 'buildTypeId', 'branchName']
