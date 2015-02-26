@@ -113,6 +113,8 @@ def build_list(ctx, show_url, show_data,
 
     data = func(**kwargs)
     click.echo('count: %d' % data['count'])
+    if data['count'] == 0:
+        return
 
     if output_format == 'table':
         column_names = ['status', 'number', 'buildTypeId', 'branchName']
