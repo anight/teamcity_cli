@@ -77,10 +77,12 @@ def project_show(ctx, args):
 
 
 @build.command(name='list')
+@click.option('--start', default=0, help='Start index')
+@click.option('--count', default=100, help='Max number of items to show')
 @click.pass_context
-def build_list(ctx):
+def build_list(ctx, start, count):
     """Display list of builds"""
-    data = ctx.obj.get_all_builds(start=0, count=100)
+    data = ctx.obj.get_all_builds(start=start, count=count)
     output_json_data(data)
 
 
