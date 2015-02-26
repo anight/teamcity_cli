@@ -101,16 +101,17 @@ def build_list(ctx, show_url, show_data,
         kwargs['branch'] = branch
 
     func = ctx.obj.get_builds
-    data = func(**kwargs)
 
     if show_url:
         kwargs['return_type'] = 'url'
         url = func(**kwargs)
+        del kwargs['return_type']
         click.echo(url)
 
     if not show_data:
         return
 
+    data = func(**kwargs)
     click.echo('count: %d' % data['count'])
 
     if output_format == 'table':
