@@ -6,6 +6,7 @@ import click
 import pygments.formatters
 import pygments.lexers
 from pyteamcity import TeamCity
+from terminaltables import AsciiTable
 
 
 lexer = pygments.lexers.get_lexer_by_name('json')
@@ -79,11 +80,24 @@ def project_show(ctx, args):
 @build.command(name='list')
 @click.option('--start', default=0, help='Start index')
 @click.option('--count', default=100, help='Max number of items to show')
+@click.option('--output-format', default='table',
+              type=click.Choice(['table', 'json']),
+              help='Output format')
 @click.pass_context
-def build_list(ctx, start, count):
+def build_list(ctx, start, count, output_format):
     """Display list of builds"""
     data = ctx.obj.get_all_builds(start=start, count=count)
-    output_json_data(data)
+    if output_format == 'table':
+        column_names = ['status', 'number', 'buildTypeId', 'branchName']
+        table_data = [column_names]
+        for build in data['build']:
+            row = [build.get(column_name, 'N/A')
+                   for column_name in column_names]
+            table_data.append(row)
+        table = AsciiTable(table_data)
+        click.echo(table.table)
+    elif output_format == 'json':
+        output_json_data(data)
 
 
 @build.group(name='show')
