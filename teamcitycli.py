@@ -100,11 +100,7 @@ def build_list(ctx, show_url, show_data,
     if branch:
         kwargs['branch'] = branch
 
-    if build_type_id:
-        func = ctx.obj.get_all_builds_by_build_type_id
-    else:
-        func = ctx.obj.get_all_builds
-
+    func = ctx.obj.get_builds
     data = func(**kwargs)
 
     if show_url:
