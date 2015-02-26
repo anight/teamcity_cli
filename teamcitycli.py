@@ -111,7 +111,7 @@ def build_list(ctx, show_url, show_data,
     if not show_data:
         return
 
-    click.echo()
+    click.echo('count: %d' % data['count'])
 
     if output_format == 'table':
         column_names = ['status', 'number', 'buildTypeId', 'branchName']
