@@ -80,13 +80,19 @@ def project_show(ctx, args):
 @build.command(name='list')
 @click.option('--start', default=0, help='Start index')
 @click.option('--count', default=100, help='Max number of items to show')
+@click.option('--build-type-id', default=None, help='buildTypeId to filter on')
 @click.option('--output-format', default='table',
               type=click.Choice(['table', 'json']),
               help='Output format')
 @click.pass_context
-def build_list(ctx, start, count, output_format):
+def build_list(ctx, start, count, build_type_id, output_format):
     """Display list of builds"""
-    data = ctx.obj.get_all_builds(start=start, count=count)
+    if build_type_id:
+        data = ctx.obj.get_all_builds_by_build_type_id(
+            start=start, count=count, build_type_id=build_type_id)
+    else:
+        data = ctx.obj.get_all_builds(start=start, count=count)
+
     if output_format == 'table':
         column_names = ['status', 'number', 'buildTypeId', 'branchName']
         table_data = [column_names]
