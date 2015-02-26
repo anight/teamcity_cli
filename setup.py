@@ -1,5 +1,4 @@
 import os
-import sys
 from setuptools import setup
 
 this_dir = os.path.dirname(__file__)
@@ -17,7 +16,7 @@ setup(
     py_modules=['teamcitycli'],
     zip_safe=False,
     install_requires=['click', 'pyteamcity', 'terminaltables'],
-    entry_points = """\
+    entry_points="""\
       [console_scripts]
       teamcity_cli = teamcitycli:cli
     """,
