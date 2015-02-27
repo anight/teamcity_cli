@@ -85,34 +85,36 @@ def project_show(ctx, args):
 @click.option('--start', default=0, help='Start index')
 @click.option('--count', default=100, help='Max number of items to show')
 @click.option('--build-type-id', default=None, help='buildTypeId to filter on')
+@click.option('--branch', default=None, help='branch to filter on')
 @click.option('--output-format', default='table',
               type=click.Choice(['table', 'json']),
               help='Output format')
 @click.pass_context
 def build_list(ctx, show_url, show_data,
-               start, count, build_type_id, output_format):
+               start, count, build_type_id, branch, output_format):
     """Display list of builds"""
     kwargs = {'start': start,
               'count': count}
     if build_type_id:
         kwargs['build_type_id'] = build_type_id
+    if branch:
+        kwargs['branch'] = branch
 
-    if build_type_id:
-        func = ctx.obj.get_all_builds_by_build_type_id
-    else:
-        func = ctx.obj.get_all_builds
-
-    data = func(**kwargs)
+    func = ctx.obj.get_builds
 
     if show_url:
         kwargs['return_type'] = 'url'
         url = func(**kwargs)
+        del kwargs['return_type']
         click.echo(url)
 
     if not show_data:
         return
 
-    click.echo()
+    data = func(**kwargs)
+    click.echo('count: %d' % data['count'])
+    if data['count'] == 0:
+        return
 
     if output_format == 'table':
         column_names = ['status', 'number', 'buildTypeId', 'branchName']
