@@ -12,6 +12,8 @@ from terminaltables import AsciiTable
 lexer = pygments.lexers.get_lexer_by_name('json')
 formatter = pygments.formatters.TerminalFormatter()
 
+default_build_list_columns = 'status,number,buildTypeId,branchName'
+
 
 def output_json_data(data):
     output = json.dumps(data, indent=4)
@@ -89,9 +91,13 @@ def project_show(ctx, args):
 @click.option('--output-format', default='table',
               type=click.Choice(['table', 'json']),
               help='Output format')
+@click.option('--columns', default=default_build_list_columns,
+              help='comma-separated list of columns to show in table')
 @click.pass_context
 def build_list(ctx, show_url, show_data,
-               start, count, build_type_id, branch, output_format):
+               start, count,
+               build_type_id, branch,
+               output_format, columns):
     """Display list of builds"""
     kwargs = {'start': start,
               'count': count}
@@ -117,7 +123,7 @@ def build_list(ctx, show_url, show_data,
         return
 
     if output_format == 'table':
-        column_names = ['status', 'number', 'buildTypeId', 'branchName']
+        column_names = columns.split(',')
         output_table(column_names, data)
     elif output_format == 'json':
         output_json_data(data)
