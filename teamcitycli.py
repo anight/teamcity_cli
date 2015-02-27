@@ -2,6 +2,7 @@
 
 import json
 
+from ansi_str import ansi_str
 import click
 import pygments.formatters
 import pygments.lexers
@@ -134,9 +135,18 @@ def output_table(column_names, data):
     for build in data['build']:
         row = [build.get(column_name, 'N/A')
                for column_name in column_names]
+        colorize_row(row)
         table_data.append(row)
     table = AsciiTable(table_data)
     click.echo(table.table)
+
+
+def colorize_row(row):
+    for idx, value in enumerate(row):
+        if value == 'SUCCESS':
+            row[idx] = ansi_str(click.style(value, fg='green', bold=True))
+        elif value == 'FAILURE':
+            row[idx] = ansi_str(click.style(value, fg='red', bold=True))
 
 
 @build.group(name='show')
