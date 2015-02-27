@@ -17,3 +17,15 @@ teamcity_cli
       project  Commands related to projects
       server   Commands related to the server instance
       user     Commands related to users
+
+    $ teamcity_cli build list --build-type-id=Ansvc_Branches_Py34 --branch=develop
+    count: 5
+    +---------+--------+---------------------+------------+
+    | status  | number | buildTypeId         | branchName |
+    +---------+--------+---------------------+------------+
+    | SUCCESS | 50     | Ansvc_Branches_Py34 | develop    |
+    | SUCCESS | 47     | Ansvc_Branches_Py34 | develop    |
+    | FAILURE | 3      | Ansvc_Branches_Py34 | develop    |
+    | SUCCESS | 2      | Ansvc_Branches_Py34 | develop    |
+    | FAILURE | 1      | Ansvc_Branches_Py34 | develop    |
+    +---------+--------+---------------------+------------+
