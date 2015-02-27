@@ -3,6 +3,7 @@
 import json
 
 import click
+from colorclass import Color
 import pygments.formatters
 import pygments.lexers
 from pyteamcity import TeamCity
@@ -134,9 +135,23 @@ def output_table(column_names, data):
     for build in data['build']:
         row = [build.get(column_name, 'N/A')
                for column_name in column_names]
+        colorize_row(row)
         table_data.append(row)
     table = AsciiTable(table_data)
     click.echo(table.table)
+
+
+def colorize_row(row):
+    for idx, value in enumerate(row):
+        if value == 'SUCCESS':
+            row[idx] = colorize(value, 'green')
+        elif value == 'FAILURE':
+            row[idx] = colorize(value, 'red')
+
+
+def colorize(s, color, auto=True):
+    tag = '%s%s' % ('auto' if auto else '', color)
+    return Color('{%s}%s{/%s}' % (tag, s, tag))
 
 
 @build.group(name='show')
