@@ -29,3 +29,7 @@ teamcity_cli
     | SUCCESS | 2      | Ansvc_Branches_Py34 | develop    |
     | FAILURE | 1      | Ansvc_Branches_Py34 | develop    |
     +---------+--------+---------------------+------------+
+
+Now with color!
+
+.. image:: screenshot.png
