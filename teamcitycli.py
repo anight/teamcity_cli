@@ -118,15 +118,19 @@ def build_list(ctx, show_url, show_data,
 
     if output_format == 'table':
         column_names = ['status', 'number', 'buildTypeId', 'branchName']
-        table_data = [column_names]
-        for build in data['build']:
-            row = [build.get(column_name, 'N/A')
-                   for column_name in column_names]
-            table_data.append(row)
-        table = AsciiTable(table_data)
-        click.echo(table.table)
+        output_table(column_names, data)
     elif output_format == 'json':
         output_json_data(data)
+
+
+def output_table(column_names, data):
+    table_data = [column_names]
+    for build in data['build']:
+        row = [build.get(column_name, 'N/A')
+               for column_name in column_names]
+        table_data.append(row)
+    table = AsciiTable(table_data)
+    click.echo(table.table)
 
 
 @build.group(name='show')
