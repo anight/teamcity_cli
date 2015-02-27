@@ -15,7 +15,7 @@ setup(
     url='https://github.com/SurveyMonkey/teamcity_cli',
     py_modules=['teamcitycli'],
     zip_safe=False,
-    install_requires=['click', 'pyteamcity', 'terminaltables'],
+    install_requires=['click', 'colorclass', 'pyteamcity', 'terminaltables'],
     entry_points="""\
       [console_scripts]
       teamcity_cli = teamcitycli:cli
