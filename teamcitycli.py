@@ -7,7 +7,7 @@ from colorclass import Color
 import pygments.formatters
 import pygments.lexers
 from pyteamcity import TeamCity
-from terminaltables import AsciiTable
+import terminaltables
 
 
 lexer = pygments.lexers.get_lexer_by_name('json')
@@ -137,7 +137,7 @@ def output_table(column_names, data):
                for column_name in column_names]
         colorize_row(row)
         table_data.append(row)
-    table = AsciiTable(table_data)
+    table = terminaltables.SingleTable(table_data)
     click.echo(table.table)
 
 
