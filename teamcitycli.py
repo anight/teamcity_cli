@@ -89,6 +89,8 @@ def project_show(ctx, args):
 @click.option('--count', default=100, help='Max number of items to show')
 @click.option('--build-type-id', default=None, help='buildTypeId to filter on')
 @click.option('--branch', default=None, help='branch to filter on')
+@click.option('--status', default=None, help='filter on build status',
+              type=click.Choice(['success', 'failure', 'error']))
 @click.option('--output-format', default='table',
               type=click.Choice(['table', 'json']),
               help='Output format')
@@ -97,7 +99,7 @@ def project_show(ctx, args):
 @click.pass_context
 def build_list(ctx, show_url, show_data,
                start, count,
-               build_type_id, branch,
+               build_type_id, branch, status,
                output_format, columns):
     """Display list of builds"""
     kwargs = {'start': start,
@@ -106,6 +108,8 @@ def build_list(ctx, show_url, show_data,
         kwargs['build_type_id'] = build_type_id
     if branch:
         kwargs['branch'] = branch
+    if status:
+        kwargs['status'] = status
 
     func = ctx.obj.get_builds
 
