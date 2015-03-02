@@ -6,7 +6,7 @@ import click
 from colorclass import Color
 import pygments.formatters
 import pygments.lexers
-from pyteamcity import TeamCity
+from pyteamcity import TeamCity, HTTPError
 import terminaltables
 
 
@@ -118,7 +118,15 @@ def build_list(ctx, show_url, show_data,
     if not show_data:
         return
 
-    data = func(**kwargs)
+    try:
+        data = func(**kwargs)
+    except HTTPError as e:
+        click.echo('url: %s' % e.url)
+        click.echo('status_code: %s' % e.status_code)
+        click.echo()
+        click.echo(e)
+        return
+
     click.echo('count: %d' % data['count'])
     if data['count'] == 0:
         return
