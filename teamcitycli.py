@@ -13,7 +13,7 @@ import terminaltables
 lexer = pygments.lexers.get_lexer_by_name('json')
 formatter = pygments.formatters.TerminalFormatter()
 
-default_build_list_columns = 'status,number,buildTypeId,branchName'
+default_build_list_columns = 'status,id,number,buildTypeId,branchName'
 
 
 def output_json_data(data):
@@ -145,7 +145,7 @@ def build_list(ctx, show_url, show_data,
 def output_table(column_names, data):
     table_data = [column_names]
     for build in data['build']:
-        row = [build.get(column_name, 'N/A')
+        row = [str(build.get(column_name, 'N/A'))
                for column_name in column_names]
         colorize_row(row)
         table_data.append(row)
