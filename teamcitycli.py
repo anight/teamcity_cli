@@ -91,6 +91,10 @@ def project_show(ctx, args):
 @click.option('--branch', default=None, help='branch to filter on')
 @click.option('--status', default=None, help='filter on build status',
               type=click.Choice(['success', 'failure', 'error']))
+@click.option('--tags', default=None,
+              help='comma-delimited list of build tags '
+                   '(only builds containing all the specified tags '
+                   'are returned)')
 @click.option('--output-format', default='table',
               type=click.Choice(['table', 'json']),
               help='Output format')
@@ -99,7 +103,7 @@ def project_show(ctx, args):
 @click.pass_context
 def build_list(ctx, show_url, show_data,
                start, count,
-               build_type_id, branch, status,
+               build_type_id, branch, status, tags,
                output_format, columns):
     """Display list of builds"""
     kwargs = {'start': start,
@@ -110,6 +114,8 @@ def build_list(ctx, show_url, show_data,
         kwargs['branch'] = branch
     if status:
         kwargs['status'] = status
+    if tags:
+        kwargs['tags'] = tags
 
     func = ctx.obj.get_builds
 
