@@ -181,7 +181,7 @@ def colorize_row(row):
     for idx, value in enumerate(row):
         if value == 'SUCCESS':
             row[idx] = colorize(value, 'green')
-        elif value == 'FAILURE':
+        elif value in ('ERROR', 'FAILURE'):
             row[idx] = colorize(value, 'red')
 
 
