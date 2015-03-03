@@ -14,6 +14,7 @@ lexer = pygments.lexers.get_lexer_by_name('json')
 formatter = pygments.formatters.TerminalFormatter()
 
 default_build_list_columns = 'status,id,number,buildTypeId,branchName'
+default_project_list_columns = 'name,id,parentProjectId'
 
 
 def output_json_data(data):
@@ -63,11 +64,22 @@ def server_info(ctx):
 
 
 @project.command(name='list')
+@click.option('--parent-project-id', default=None,
+              help='parent_project_id to filter on')
+@click.option('--output-format', default='table',
+              type=click.Choice(['table', 'json']),
+              help='Output format')
+@click.option('--columns', default=default_project_list_columns,
+              help='comma-separated list of columns to show in table')
 @click.pass_context
-def project_list(ctx):
+def project_list(ctx, parent_project_id, output_format, columns):
     """Display list of projects"""
-    data = ctx.obj.get_all_projects()
-    output_json_data(data)
+    data = ctx.obj.get_projects(parent_project_id=parent_project_id)
+    if output_format == 'table':
+        column_names = columns.split(',')
+        output_table(column_names, data)
+    elif output_format == 'json':
+        output_json_data(data)
 
 
 @project.command(name='show')
@@ -148,15 +160,15 @@ def build_list(ctx, show_url, show_data,
 
     if output_format == 'table':
         column_names = columns.split(',')
-        output_table(column_names, data)
+        output_table(column_names, data['build'])
     elif output_format == 'json':
         output_json_data(data)
 
 
 def output_table(column_names, data):
     table_data = [column_names]
-    for build in data['build']:
-        row = [str(build.get(column_name, 'N/A'))
+    for item in data:
+        row = [str(item.get(column_name, 'N/A'))
                for column_name in column_names]
         colorize_row(row)
         table_data.append(row)
