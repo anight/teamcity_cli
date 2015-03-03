@@ -15,6 +15,7 @@ formatter = pygments.formatters.TerminalFormatter()
 
 default_build_list_columns = 'status,id,number,buildTypeId,branchName'
 default_project_list_columns = 'name,id,parentProjectId'
+default_agent_list_columns = 'name,id'
 
 
 def output_json_data(data):
@@ -77,7 +78,7 @@ def project_list(ctx, parent_project_id, output_format, columns):
     data = ctx.obj.get_projects(parent_project_id=parent_project_id)
     if output_format == 'table':
         column_names = columns.split(',')
-        output_table(column_names, data)
+        output_table(column_names, data['project'])
     elif output_format == 'json':
         output_json_data(data)
 
@@ -251,11 +252,20 @@ def server_agent():
 
 
 @server_agent.command(name='list')
+@click.option('--output-format', default='table',
+              type=click.Choice(['table', 'json']),
+              help='Output format')
+@click.option('--columns', default=default_agent_list_columns,
+              help='comma-separated list of columns to show in table')
 @click.pass_context
-def server_agent_list(ctx):
+def server_agent_list(ctx, output_format, columns):
     """Display list of agents"""
     data = ctx.obj.get_agents()
-    output_json_data(data)
+    if output_format == 'table':
+        column_names = columns.split(',')
+        output_table(column_names, data['agent'])
+    elif output_format == 'json':
+        output_json_data(data)
 
 
 @server_agent.command(name='show')
