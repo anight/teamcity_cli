@@ -95,6 +95,9 @@ def project_show(ctx, args):
               help='comma-delimited list of build tags '
                    '(only builds containing all the specified tags '
                    'are returned)')
+@click.option('--user', default=None,
+              help='limit builds to only those triggered '
+                   'by the user specified')
 @click.option('--output-format', default='table',
               type=click.Choice(['table', 'json']),
               help='Output format')
@@ -103,7 +106,7 @@ def project_show(ctx, args):
 @click.pass_context
 def build_list(ctx, show_url, show_data,
                start, count,
-               build_type_id, branch, status, tags,
+               build_type_id, branch, status, tags, user,
                output_format, columns):
     """Display list of builds"""
     kwargs = {'start': start,
@@ -116,6 +119,8 @@ def build_list(ctx, show_url, show_data,
         kwargs['status'] = status
     if tags:
         kwargs['tags'] = tags
+    if user:
+        kwargs['user'] = user
 
     func = ctx.obj.get_builds
 
