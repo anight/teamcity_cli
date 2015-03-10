@@ -18,7 +18,7 @@ setup(
     install_requires=['click', 'colorclass', 'pyteamcity', 'terminaltables'],
     entry_points="""\
       [console_scripts]
-      teamcity_cli = teamcitycli:cli
+      teamcity = teamcitycli:cli
     """,
     license='MIT',
     classifiers=[
