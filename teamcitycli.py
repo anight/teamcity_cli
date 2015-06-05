@@ -202,7 +202,7 @@ def build_show():
 @click.pass_context
 @click.argument('args', nargs=-1)
 def build_show_statistics(ctx, args):
-    """Display info for selected build(s)"""
+    """Display statistics for selected build(s)"""
     for build_id in args:
         data = ctx.obj.get_build_statistics_by_build_id(build_id)
         output_json_data(data)
@@ -236,7 +236,7 @@ def build_show_artifacts(ctx, args):
               help='Output format')
 @click.argument('args', nargs=-1)
 def build_show_parameters(ctx, output_format, args):
-    """Display info for selected build(s)"""
+    """Display parameters for selected build(s)"""
     column_names = ['name', 'value']
     for build_id in args:
         response = ctx.obj.get_build_parameters_by_build_id(build_id)
@@ -251,7 +251,7 @@ def build_show_parameters(ctx, output_format, args):
 @click.pass_context
 @click.argument('args', nargs=-1)
 def build_show_tags(ctx, args):
-    """Display info for selected build(s)"""
+    """Display tags for selected build(s)"""
     for build_id in args:
         data = ctx.obj.get_build_tags_by_build_id(build_id)
         output_json_data(data)
