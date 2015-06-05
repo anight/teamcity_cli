@@ -208,6 +208,16 @@ def build_show_statistics(ctx, args):
         output_json_data(data)
 
 
+@build_show.command(name='log')
+@click.pass_context
+@click.argument('args', nargs=-1)
+def build_show_log(ctx, args):
+    """Display log for selected build(s)"""
+    for build_id in args:
+        data = ctx.obj.get_build_log_by_build_id(build_id)
+        click.echo(data.text)
+
+
 @build_show.command(name='parameters')
 @click.pass_context
 @click.option('--output-format', default='table',
