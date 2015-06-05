@@ -220,12 +220,18 @@ def build_show_log(ctx, args):
 
 @build_show.command(name='artifacts')
 @click.pass_context
-@click.argument('args', nargs=-1)
-def build_show_artifacts(ctx, args):
+@click.argument('build_id')
+@click.argument('data_type', default='')
+@click.argument('artifact_relative_name', default='')
+def build_show_artifacts(ctx, build_id, data_type, artifact_relative_name):
     """Display artifacts for selected build(s)"""
-    for build_id in args:
-        data = ctx.obj.get_build_artifacts_by_build_id(build_id)
-        # click.echo(data.text)
+    data = ctx.obj.get_build_artifacts_by_build_id(
+        build_id,
+        data_type=data_type,
+        artifact_relative_name=artifact_relative_name)
+    if hasattr(data, 'startswith'):
+        click.echo(data)
+    else:
         output_json_data(data)
 
 
