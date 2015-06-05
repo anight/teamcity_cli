@@ -208,6 +208,24 @@ def build_show_statistics(ctx, args):
         output_json_data(data)
 
 
+@build_show.command(name='parameters')
+@click.pass_context
+@click.option('--output-format', default='table',
+              type=click.Choice(['table', 'json']),
+              help='Output format')
+@click.argument('args', nargs=-1)
+def build_show_parameters(ctx, output_format, args):
+    """Display info for selected build(s)"""
+    column_names = ['name', 'value']
+    for build_id in args:
+        response = ctx.obj.get_build_parameters_by_build_id(build_id)
+        data = response['property']
+        if output_format == 'table':
+            output_table(column_names, data)
+        elif output_format == 'json':
+            output_json_data(data)
+
+
 @build_show.command(name='tags')
 @click.pass_context
 @click.argument('args', nargs=-1)
