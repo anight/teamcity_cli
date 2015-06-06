@@ -193,10 +193,10 @@ def colorize(s, color, auto=True):
     return Color('{%s}%s{/%s}' % (tag, s, tag))
 
 
-@build.group(name='show')
+@build.group(name='show',
+             short_help='Commands for showing statistics/tags/etc. for builds')
 def build_show():
-    """Show statistics/tags/etc. for builds"""
-
+    pass
 
 @build_show.command(name='statistics')
 @click.pass_context
