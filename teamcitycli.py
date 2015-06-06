@@ -193,6 +193,20 @@ def colorize(s, color, auto=True):
     return Color('{%s}%s{/%s}' % (tag, s, tag))
 
 
+@build.group(name='queue',
+             short_help='Commands for build queue management')
+def build_queue():
+    pass
+
+
+@build_queue.command(name='list')
+@click.pass_context
+def build_queue_list(ctx):
+    """List queued build(s)"""
+    data = ctx.obj.get_queued_builds()
+    output_json_data(data)
+
+
 @build.group(name='show',
              short_help='Commands for showing statistics/tags/etc. for builds')
 def build_show():
