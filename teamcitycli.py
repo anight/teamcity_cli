@@ -169,6 +169,17 @@ def build_list(ctx, show_url, show_data,
         output_json_data(data)
 
 
+@build.command(name='trigger')
+@click.pass_context
+@click.option('--build-type-id', default=None, help='buildTypeId to filter on')
+def build_trigger(ctx, build_type_id):
+    """Trigger a new build"""
+    data = ctx.obj.trigger_build(build_type_id=build_type_id)
+    # output_json_data(data)
+    click.echo(data)
+    click.echo(data.text)
+
+
 def output_table(column_names, data):
     table_data = [column_names]
     for item in data:
