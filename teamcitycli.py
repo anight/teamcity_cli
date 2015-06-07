@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import json
+import webbrowser
 
 import click
 from colorclass import Color
@@ -176,6 +177,8 @@ def build_trigger(ctx, build_type_id):
     """Trigger a new build"""
     data = ctx.obj.trigger_build(build_type_id=build_type_id)
     output_json_data(data)
+    url = data['webUrl'] + '&tab=buildLog'
+    webbrowser.open(url)
 
 
 def output_table(column_names, data):
