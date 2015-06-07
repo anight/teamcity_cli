@@ -225,6 +225,16 @@ def colorize(s, color, auto=True):
     return Color('{%s}%s{/%s}' % (tag, s, tag))
 
 
+@build.command(name='browse')
+@click.pass_context
+@click.argument('args', nargs=-1)
+def build_browse(ctx, args):
+    """Open selected build(s) in web browser"""
+    for build_id in args:
+        data = ctx.obj.get_build_by_build_id(build_id)
+        webbrowser.open(data['webUrl'])
+
+
 @build.group(name='queue',
              short_help='Commands for build queue management')
 def build_queue():
