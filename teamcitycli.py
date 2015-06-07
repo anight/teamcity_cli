@@ -354,9 +354,11 @@ def server_agent_show(ctx, args):
 
 @change.command(name='list')
 @click.pass_context
-def change_list(ctx):
+@click.option('--start', default=0, help='Start index')
+@click.option('--count', default=10, help='Max number of items to show')
+def change_list(ctx, start, count):
     """Display list of changes"""
-    data = ctx.obj.get_all_changes()
+    data = ctx.obj.get_all_changes(start=start, count=count)
     output_json_data(data)
 
 
