@@ -235,6 +235,17 @@ def build_queue_list(ctx):
 def build_show():
     pass
 
+
+@build_show.command(name='details')
+@click.pass_context
+@click.argument('args', nargs=-1)
+def build_show_details(ctx, args):
+    """Display details for selected build(s)"""
+    for build_id in args:
+        data = ctx.obj.get_build_by_build_id(build_id)
+        output_json_data(data)
+
+
 @build_show.command(name='statistics')
 @click.pass_context
 @click.argument('args', nargs=-1)
