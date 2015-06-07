@@ -14,7 +14,7 @@ import terminaltables
 lexer = pygments.lexers.get_lexer_by_name('json')
 formatter = pygments.formatters.TerminalFormatter()
 
-default_build_list_columns = 'status,state,id,buildTypeId,number,branchName'
+default_build_list_columns = 'status,state,statusText,id,buildTypeId,number,branchName,user'
 default_project_list_columns = 'name,id,parentProjectId'
 default_agent_list_columns = 'name,id'
 
@@ -162,6 +162,15 @@ def build_list(ctx, show_url, show_data,
         click.echo()
         click.echo(e)
         return
+
+    for build in data['build']:
+        details = ctx.obj.get_build_by_build_id(build['id'])
+        try:
+            build['user'] = details['triggered']['user']['username']
+            build['statusText'] = details['statusText']
+            build['details'] = details
+        except KeyError:
+            build['user'] = 'N/A'
 
     click.echo('count: %d' % data['count'])
     if data['count'] == 0:
