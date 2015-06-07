@@ -175,9 +175,7 @@ def build_list(ctx, show_url, show_data,
 def build_trigger(ctx, build_type_id):
     """Trigger a new build"""
     data = ctx.obj.trigger_build(build_type_id=build_type_id)
-    # output_json_data(data)
-    click.echo(data)
-    click.echo(data.text)
+    output_json_data(data)
 
 
 def output_table(column_names, data):
