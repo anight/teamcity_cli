@@ -191,6 +191,8 @@ def build_trigger(ctx, build_type_id, branch):
 def output_table(column_names, data):
     table_data = [column_names]
     for item in data:
+        if item.get('state') == 'running':
+            item['status'] = 'RUNNING'
         row = [str(item.get(column_name, 'N/A'))
                for column_name in column_names]
         colorize_row(row)
@@ -205,6 +207,8 @@ def colorize_row(row):
             row[idx] = colorize(value, 'green')
         elif value in ('ERROR', 'FAILURE'):
             row[idx] = colorize(value, 'red')
+        elif value in ('RUNNING'):
+            row[idx] = colorize(value, 'yellow')
 
 
 def colorize(s, color, auto=True):
