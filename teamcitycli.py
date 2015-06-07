@@ -173,9 +173,12 @@ def build_list(ctx, show_url, show_data,
 @build.command(name='trigger')
 @click.pass_context
 @click.option('--build-type-id', default=None, help='buildTypeId to filter on')
-def build_trigger(ctx, build_type_id):
+@click.option('--branch', default=None, help='branch to filter on')
+def build_trigger(ctx, build_type_id, branch):
     """Trigger a new build"""
-    data = ctx.obj.trigger_build(build_type_id=build_type_id)
+    data = ctx.obj.trigger_build(
+        build_type_id=build_type_id,
+        branch=branch)
     output_json_data(data)
     url = data['webUrl'] + '&tab=buildLog'
     webbrowser.open(url)
