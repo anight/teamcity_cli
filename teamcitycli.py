@@ -103,7 +103,7 @@ def project_show(ctx, args):
 @click.option('--count', default=100, help='Max number of items to show')
 @click.option('--project', default=None, help='project to filter on')
 @click.option('--build-type-id', default=None, help='buildTypeId to filter on')
-@click.option('--branch', default=None, help='branch to filter on')
+@click.option('--branch', default='default:any', help='branch to filter on')
 @click.option('--status', default=None, help='filter on build status',
               type=click.Choice(['success', 'failure', 'error']))
 @click.option('--tags', default=None,
