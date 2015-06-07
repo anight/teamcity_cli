@@ -14,7 +14,7 @@ import terminaltables
 lexer = pygments.lexers.get_lexer_by_name('json')
 formatter = pygments.formatters.TerminalFormatter()
 
-default_build_list_columns = 'status,state,statusText,id,buildTypeId,number,branchName,user'
+default_build_list_columns = 'status,statusText,id,buildTypeId,number,branchName,user'
 default_project_list_columns = 'name,id,parentProjectId'
 default_agent_list_columns = 'name,id'
 
