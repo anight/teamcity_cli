@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import json
+import sys
 import webbrowser
 
 import click
@@ -25,11 +26,17 @@ def output_json_data(data):
     click.echo(output)
 
 
+def error_handler(e):
+    sys.stderr.write('ERROR: %s\n' % e)
+    raise click.Abort()
+
+
 @click.group()
 @click.pass_context
 def cli(ctx):
     """CLI for interacting with TeamCity"""
     ctx.obj = TeamCity()
+    ctx.obj.error_handler = error_handler
 
 
 @cli.group()
