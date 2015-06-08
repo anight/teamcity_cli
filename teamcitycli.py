@@ -189,14 +189,17 @@ def build_list(ctx, show_url, show_data,
 @click.option('--branch', default=None, help='branch to filter on')
 @click.option('--comment', help='comment message for build')
 @click.option('--parameter', multiple=True, help='Specify custom parameters')
-def build_trigger(ctx, build_type_id, branch, comment, parameter):
+@click.option('--agent-id', default=None,
+              help='ID of agent to force build to run on')
+def build_trigger(ctx, build_type_id, branch, comment, parameter, agent_id):
     """Trigger a new build"""
     parameters = dict([p.split('=', 1) for p in parameter])
     data = ctx.obj.trigger_build(
         build_type_id=build_type_id,
         branch=branch,
         comment=comment,
-        parameters=parameters)
+        parameters=parameters,
+        agent_id=agent_id)
     ctx.invoke(build_show_details, args=[data['id']])
     url = data['webUrl'] + '&tab=buildLog'
     webbrowser.open(url)
