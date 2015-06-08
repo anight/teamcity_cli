@@ -194,10 +194,7 @@ def build_trigger(ctx, build_type_id, branch, comment):
         build_type_id=build_type_id,
         branch=branch,
         comment=comment)
-    more_data = ctx.obj.get_build_by_build_id(data['id'])
-    data['queuedDate'] = more_data['queuedDate']
-    data['number'] = more_data['number']
-    output_json_data(data)
+    ctx.invoke(build_show_details, args=[data['id']])
     url = data['webUrl'] + '&tab=buildLog'
     webbrowser.open(url)
 
