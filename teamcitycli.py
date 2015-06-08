@@ -259,13 +259,35 @@ def build_show():
 
 
 @build_show.command(name='details')
+@click.option('--show-all/--no-show-all', default=False,
+              help='Show all data for build (very verbose)')
 @click.pass_context
 @click.argument('args', nargs=-1)
-def build_show_details(ctx, args):
+def build_show_details(ctx, show_all, args):
     """Display details for selected build(s)"""
     for build_id in args:
-        data = ctx.obj.get_build_by_build_id(build_id)
-        output_json_data(data)
+        all_data = ctx.obj.get_build_by_build_id(build_id)
+        if show_all:
+            output_json_data(all_data)
+        else:
+            data = {
+                'number': all_data['number'],
+                'id': all_data['id'],
+                'startDate': all_data['startDate'],
+                'queuedDate': all_data['queuedDate'],
+                'finishDate': all_data.get('finishDate'),
+                'branchName': all_data['branchName'],
+                'agent': all_data['agent']['name'],
+                'projectId': all_data['buildType']['projectId'],
+                'projectName': all_data['buildType']['projectName'],
+                'webUrl': all_data['webUrl'],
+                'status': all_data['status'],
+                'state': all_data['state'],
+                'statusText': all_data['statusText'],
+            }
+            if all_data['triggered'].get('type') == 'user':
+                data['username'] = all_data['triggered']['user']['username']
+            output_json_data(data)
 
 
 @build_show.command(name='statistics')
