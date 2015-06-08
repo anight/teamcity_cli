@@ -187,11 +187,13 @@ def build_list(ctx, show_url, show_data,
 @click.pass_context
 @click.option('--build-type-id', default=None, help='buildTypeId to filter on')
 @click.option('--branch', default=None, help='branch to filter on')
-def build_trigger(ctx, build_type_id, branch):
+@click.option('--comment', help='comment message for build')
+def build_trigger(ctx, build_type_id, branch, comment):
     """Trigger a new build"""
     data = ctx.obj.trigger_build(
         build_type_id=build_type_id,
-        branch=branch)
+        branch=branch,
+        comment=comment)
     more_data = ctx.obj.get_build_by_build_id(data['id'])
     data['queuedDate'] = more_data['queuedDate']
     data['number'] = more_data['number']
