@@ -403,6 +403,14 @@ def server_agent():
     """Show info about agents"""
 
 
+@server_agent.command(name='statistics')
+@click.pass_context
+def server_agent_statistics(ctx):
+    """Display statistics for agents - num_idle, etc."""
+    data = ctx.obj.get_agent_statistics()
+    output_json_data(data)
+
+
 @server_agent.command(name='list')
 @click.option('--output-format', default='table',
               type=click.Choice(['table', 'json']),
