@@ -17,7 +17,7 @@ formatter = pygments.formatters.TerminalFormatter()
 
 default_build_list_columns = 'status,statusText,id,buildTypeId,number,branchName,user'
 default_project_list_columns = 'name,id,parentProjectId'
-default_agent_list_columns = 'name,id'
+default_agent_list_columns = 'name,id,ip,pool'
 
 
 def output_json_data(data):
@@ -413,6 +413,12 @@ def server_agent():
 def server_agent_list(ctx, output_format, columns):
     """Display list of agents"""
     data = ctx.obj.get_agents()
+
+    for agent in data['agent']:
+        agent_info = ctx.obj.get_agent_by_agent_id(agent['id'])
+        agent['ip'] = agent_info['ip']
+        agent['pool'] = agent_info['pool']['name']
+
     if output_format == 'table':
         column_names = columns.split(',')
         output_table(column_names, data['agent'])
