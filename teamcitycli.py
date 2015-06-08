@@ -188,12 +188,15 @@ def build_list(ctx, show_url, show_data,
 @click.option('--build-type-id', default=None, help='buildTypeId to filter on')
 @click.option('--branch', default=None, help='branch to filter on')
 @click.option('--comment', help='comment message for build')
-def build_trigger(ctx, build_type_id, branch, comment):
+@click.option('--parameter', multiple=True, help='Specify custom parameters')
+def build_trigger(ctx, build_type_id, branch, comment, parameter):
     """Trigger a new build"""
+    parameters = dict([p.split('=', 1) for p in parameter])
     data = ctx.obj.trigger_build(
         build_type_id=build_type_id,
         branch=branch,
-        comment=comment)
+        comment=comment,
+        parameters=parameters)
     ctx.invoke(build_show_details, args=[data['id']])
     url = data['webUrl'] + '&tab=buildLog'
     webbrowser.open(url)
