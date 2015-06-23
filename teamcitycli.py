@@ -208,7 +208,7 @@ def build_trigger(ctx, build_type_id, branch, comment, parameter, agent_id):
         comment=comment,
         parameters=parameters,
         agent_id=agent_id)
-    ctx.invoke(build_show_details, args=[data['id']])
+    ctx.invoke(build_queue_show, args=[data['id']])
     url = data['webUrl'] + '&tab=buildLog'
     webbrowser.open(url)
 
