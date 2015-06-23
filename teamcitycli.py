@@ -16,6 +16,7 @@ lexer = pygments.lexers.get_lexer_by_name('json')
 formatter = pygments.formatters.TerminalFormatter()
 
 default_build_list_columns = 'status,statusText,id,buildTypeId,number,branchName,user'
+default_queued_build_list_columns = 'state,id,buildTypeId,branchName,user'
 default_project_list_columns = 'name,id,parentProjectId'
 default_agent_list_columns = 'name,id,ip,pool,build_type,build_text'
 
@@ -258,10 +259,25 @@ def build_queue():
 
 @build_queue.command(name='list')
 @click.pass_context
-def build_queue_list(ctx):
+@click.option('--build-type-id', default=None, help='buildTypeId to filter on')
+@click.option('--branch', default=None, help='branch to filter on')
+@click.option('--output-format', default='table',
+              type=click.Choice(['table', 'json']),
+              help='Output format')
+@click.option('--columns', default=default_queued_build_list_columns,
+              help='comma-separated list of columns to show in table')
+def build_queue_list(ctx, build_type_id, branch, output_format, columns):
     """List queued build(s)"""
     data = ctx.obj.get_queued_builds()
-    output_json_data(data)
+    click.echo('count: %d' % data['count'])
+    if data['count'] == 0:
+        return
+
+    if output_format == 'table':
+        column_names = columns.split(',')
+        output_table(column_names, data['build'])
+    elif output_format == 'json':
+        output_json_data(data)
 
 
 @build.group(name='show',
