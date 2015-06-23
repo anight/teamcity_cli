@@ -2,6 +2,7 @@
 
 import json
 import sys
+import time
 import webbrowser
 
 import click
@@ -199,7 +200,10 @@ def build_list(ctx, show_url, show_data,
 @click.option('--parameter', multiple=True, help='Specify custom parameters')
 @click.option('--agent-id', default=None,
               help='ID of agent to force build to run on')
-def build_trigger(ctx, build_type_id, branch, comment, parameter, agent_id):
+@click.option('--wait-for-run/--no-wait-for-run', default=False,
+              help='Wait for the build to start running')
+def build_trigger(ctx, build_type_id, branch, comment, parameter, agent_id,
+                  wait_for_run):
     """Trigger a new build"""
     parameters = dict([p.split('=', 1) for p in parameter])
     data = ctx.obj.trigger_build(
@@ -208,9 +212,15 @@ def build_trigger(ctx, build_type_id, branch, comment, parameter, agent_id):
         comment=comment,
         parameters=parameters,
         agent_id=agent_id)
-    ctx.invoke(build_queue_show, args=[data['id']])
+    build_id = data['id']
+    ctx.invoke(build_queue_show, args=[build_id])
     url = data['webUrl'] + '&tab=buildLog'
     webbrowser.open(url)
+    while wait_for_run and data['state'] == 'queued':
+        data = ctx.obj.get_queued_build_by_build_id(build_id)
+        click.echo('state: %s' % data['state'])
+        time.sleep(5)
+    ctx.invoke(build_queue_show, args=[build_id])
 
 
 def output_table(column_names, data):
@@ -294,6 +304,9 @@ def build_queue_show(ctx, show_all, args):
         else:
             data = {
                 'id': all_data['id'],
+                'number': all_data.get('number'),
+                'startEstimate': all_data.get('startEstimate'),
+                'startDate': all_data.get('startDate'),
                 'queuedDate': all_data['queuedDate'],
                 'finishDate': all_data.get('finishDate'),
                 'branchName': all_data['branchName'],
@@ -301,7 +314,10 @@ def build_queue_show(ctx, show_all, args):
                 'projectName': all_data['buildType']['projectName'],
                 'webUrl': all_data['webUrl'],
                 'state': all_data['state'],
+                'waitReason': all_data.get('waitReason'),
             }
+            if all_data['triggered'].get('type') == 'user':
+                data['username'] = all_data['triggered']['user']['username']
             output_json_data(data)
 
 
