@@ -280,6 +280,31 @@ def build_queue_list(ctx, build_type_id, branch, output_format, columns):
         output_json_data(data)
 
 
+@build_queue.command(name='show',
+                     short_help='Show info about a queued build')
+@click.pass_context
+@click.option('--show-all/--no-show-all', default=False,
+              help='Show all data for build (very verbose)')
+@click.argument('args', nargs=-1)
+def build_queue_show(ctx, show_all, args):
+    for build_id in args:
+        all_data = ctx.obj.get_queued_build_by_build_id(build_id)
+        if show_all:
+            output_json_data(all_data)
+        else:
+            data = {
+                'id': all_data['id'],
+                'queuedDate': all_data['queuedDate'],
+                'finishDate': all_data.get('finishDate'),
+                'branchName': all_data['branchName'],
+                'projectId': all_data['buildType']['projectId'],
+                'projectName': all_data['buildType']['projectName'],
+                'webUrl': all_data['webUrl'],
+                'state': all_data['state'],
+            }
+            output_json_data(data)
+
+
 @build.group(name='show',
              short_help='Commands for showing statistics/tags/etc. for builds')
 def build_show():
