@@ -275,14 +275,35 @@ def build_queue():
 
 @build_configs.command(name='list')
 @click.pass_context
+@click.option('--show-url/--no-show-url', default=False,
+              help='Show URL for request')
+@click.option('--project', default=None, help='project to filter on')
+@click.option('--affected-project', default=None, help='project to filter on (recursive)')
+@click.option('--template-flag', default='any', help='boolean value to get only templates or only non-templates')
 @click.option('--output-format', default='table',
               type=click.Choice(['table', 'json']),
               help='Output format')
 @click.option('--columns', default=default_build_configs_list_columns,
               help='comma-separated list of columns to show in table')
-def build_configs_list(ctx, output_format, columns):
+def build_configs_list(ctx, show_url, project, affected_project, template_flag, output_format, columns):
     """List build configs"""
-    data = ctx.obj.get_all_build_types()
+    kwargs = {}
+
+    if show_url:
+        kwargs['return_type'] = 'url'
+        url = ctx.obj.get_build_types(**kwargs)
+        del kwargs['return_type']
+        click.echo(url)
+
+    if project:
+        kwargs['project'] = project
+    if affected_project:
+        kwargs['affected_project'] = affected_project
+    if template_flag:
+        kwargs['template_flag'] = template_flag
+
+    data = ctx.obj.get_build_types(**kwargs)
+
     click.echo('count: %d' % data['count'])
     if data['count'] == 0:
         return
