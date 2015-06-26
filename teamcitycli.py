@@ -289,18 +289,18 @@ def build_configs_list(ctx, show_url, project, affected_project, template_flag, 
     """List build configs"""
     kwargs = {}
 
-    if show_url:
-        kwargs['return_type'] = 'url'
-        url = ctx.obj.get_build_types(**kwargs)
-        del kwargs['return_type']
-        click.echo(url)
-
     if project:
         kwargs['project'] = project
     if affected_project:
         kwargs['affected_project'] = affected_project
     if template_flag:
         kwargs['template_flag'] = template_flag
+
+    if show_url:
+        kwargs['return_type'] = 'url'
+        url = ctx.obj.get_build_types(**kwargs)
+        del kwargs['return_type']
+        click.echo(url)
 
     data = ctx.obj.get_build_types(**kwargs)
 
