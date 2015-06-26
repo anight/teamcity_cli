@@ -17,6 +17,7 @@ lexer = pygments.lexers.get_lexer_by_name('json')
 formatter = pygments.formatters.TerminalFormatter()
 
 default_build_list_columns = 'status,statusText,id,buildTypeId,number,branchName,user'
+default_build_configs_list_columns = 'id,projectName,name'
 default_queued_build_list_columns = 'state,id,buildTypeId,branchName,user'
 default_project_list_columns = 'name,id,parentProjectId'
 default_agent_list_columns = 'name,id,ip,pool,build_type,build_text'
@@ -44,6 +45,11 @@ def cli(ctx):
 @cli.group()
 def build():
     """Commands related to builds"""
+
+
+@cli.group()
+def build_configs():
+    """Commands related to build configs"""
 
 
 @cli.group()
@@ -265,6 +271,27 @@ def build_browse(ctx, args):
              short_help='Commands for build queue management')
 def build_queue():
     pass
+
+
+@build_configs.command(name='list')
+@click.pass_context
+@click.option('--output-format', default='table',
+              type=click.Choice(['table', 'json']),
+              help='Output format')
+@click.option('--columns', default=default_build_configs_list_columns,
+              help='comma-separated list of columns to show in table')
+def build_configs_list(ctx, output_format, columns):
+    """List build configs"""
+    data = ctx.obj.get_all_build_types()
+    click.echo('count: %d' % data['count'])
+    if data['count'] == 0:
+        return
+
+    if output_format == 'table':
+        column_names = columns.split(',')
+        output_table(column_names, data['buildType'])
+    elif output_format == 'json':
+        output_json_data(data)
 
 
 @build_queue.command(name='list')
