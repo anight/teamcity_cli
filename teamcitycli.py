@@ -315,6 +315,16 @@ def build_configs_list(ctx, show_url, project, affected_project, template_flag, 
         output_json_data(data)
 
 
+@build_configs.command(name='show',
+                       short_help='Show info about a build config')
+@click.pass_context
+@click.argument('args', nargs=-1)
+def build_configs_show(ctx, args):
+    for build_type_id in args:
+        all_data = ctx.obj.get_build_type(build_type_id)
+        output_json_data(all_data)
+
+
 @build_queue.command(name='list')
 @click.pass_context
 @click.option('--build-type-id', default=None, help='buildTypeId to filter on')
