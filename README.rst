@@ -1,7 +1,7 @@
 teamcity_cli
 ============
 
-CLI for TeamCity CI server, built on `pyteamcity <https://github.com/SurveyMonkey/pyteamcity`_
+CLI for TeamCity CI server, built on `pyteamcity <https://github.com/SurveyMonkey/pyteamcity>`_
 
 ::
 
