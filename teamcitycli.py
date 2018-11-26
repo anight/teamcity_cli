@@ -206,10 +206,12 @@ def build_list(ctx, show_url, show_data,
 @click.option('--parameter', multiple=True, help='Specify custom parameters')
 @click.option('--agent-id', default=None,
               help='ID of agent to force build to run on')
+@click.option('--open-build-log/--no-open-build-log', default=False,
+              help='open build log in browser')
 @click.option('--wait-for-run/--no-wait-for-run', default=False,
               help='Wait for the build to start running')
 def build_trigger(ctx, build_type_id, branch, comment, parameter, agent_id,
-                  wait_for_run):
+                  open_build_log, wait_for_run):
     """Trigger a new build"""
     parameters = dict([p.split('=', 1) for p in parameter])
     data = ctx.obj.trigger_build(
@@ -220,12 +222,15 @@ def build_trigger(ctx, build_type_id, branch, comment, parameter, agent_id,
         agent_id=agent_id)
     build_id = data['id']
     ctx.invoke(build_queue_show, args=[build_id])
-    url = data['webUrl'] + '&tab=buildLog'
-    webbrowser.open(url)
-    while wait_for_run and data['state'] == 'queued':
+    if open_build_log:
+        url = data['webUrl'] + '&tab=buildLog'
+        webbrowser.open(url)
+    if not wait_for_run:
+        return
+    while data['state'] == 'queued':
         data = ctx.obj.get_queued_build_by_build_id(build_id)
         click.echo('state: %s' % data['state'])
-        time.sleep(5)
+        time.sleep(1)
     ctx.invoke(build_queue_show, args=[build_id])
 
 
